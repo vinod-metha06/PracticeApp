@@ -1,4 +1,3 @@
-import {useNavigation} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
 import {
   ActivityIndicator,
@@ -42,7 +41,7 @@ const AirlineHomeScreen = () => {
 
   const handleOnPress = async () => {
     dispatch(dispatchGetAirlineDataLoading());
-    dispatchGetAirlineSearch(inputText);
+    dispatch(dispatchGetAirlineSearch(inputText));
   };
 
   const getData = async () => {
@@ -58,9 +57,7 @@ const AirlineHomeScreen = () => {
   if (airlineList.loading) {
     return <ActivityIndicator size={40} color="blue" />;
   }
-  if (inputText == '') {
-    return dispatch(dispatchGetAirlineSearchReset());
-  }
+
   if (airlineList.error) {
     return <Text>'Error while fetching the data...'</Text>;
   }
@@ -68,18 +65,8 @@ const AirlineHomeScreen = () => {
   const renderItem = ({item}: any) => {
     return (
       <View style={styles.card}>
-        {/* <Image
-              source={{uri:item.logo}}
-              style={{
-                  resizeMode:'contain',
-                  width:98,
-                  height:100,
-                  borderRadius:40
-              }}
-              /> */}
         <View style={{flexDirection: 'column', marginLeft: 10}}>
-          <Text>{item.id}</Text>
-          {/* <Text>{item.country}</Text> */}
+          <Text>{item.title}</Text>
         </View>
       </View>
     );
@@ -88,24 +75,22 @@ const AirlineHomeScreen = () => {
   return (
     <View style={styles.container}>
       <TextInput
-    placeholder="Serach here.."
-    onChangeText={t=>setInputText(t)}
-    style={styles.input}
-    />
-    <Button
-    title="Search"
-    onPress={handleOnPress}
-    />
-    {airlineList?.loading? (
-      <ActivityIndicator size={40} color="blue" />
-) : (
-    <FlatList
-    data={airlineList.data}
-    renderItem={renderItem}
-    keyExtractor={item=>item.id}
-    
-    />
-)}
+        placeholder="Serach here.."
+        onChangeText={t => setInputText(t)}
+        onChange={() => dispatch(dispatchGetAirlineSearchReset())}
+        style={styles.input}
+        clearButtonMode="always"
+      />
+      <Button title="Search" onPress={handleOnPress} />
+      {airlineList?.loading ? (
+        <ActivityIndicator size={40} color="blue" />
+      ) : (
+        <FlatList
+          data={inputText == '' ? airlineList.data : airlineList.search}
+          renderItem={renderItem}
+          keyExtractor={item => item.id}
+        />
+      )}
     </View>
   );
 };

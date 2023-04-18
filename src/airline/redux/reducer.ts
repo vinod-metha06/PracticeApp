@@ -1,7 +1,7 @@
 const AirlineState = {
   loading: false,
   data: [],
-  search:[],
+  search: [],
   error: false,
 };
 
@@ -26,23 +26,23 @@ export const AirLineReducer = (state = AirlineState, action: any) => {
         error: true,
       };
 
-      case 'GET_AIRLINE_DATA_SEARCH':
-        const list=state.data.filter((item)=>{
-          if(item.id==action.payload){
-            return item;
-          }
-        })
+    case 'GET_AIRLINE_DATA_SEARCH':
+      const list = state.data.filter(item => {
+        if (item.id == action.payload) {
+          return item;
+        }
+      });
       return {
         ...state,
         search: list,
-       
-      }; 
-      case 'GET_AIRLINE_DATA_SEARCH_RESET':
-        return {
-          ...state,
-          search:[],
-         
-        }; 
+
+        loading: false,
+      };
+    case 'GET_AIRLINE_DATA_SEARCH_RESET':
+      return {
+        ...state,
+        search: [],
+      };
 
     default:
       return state;
